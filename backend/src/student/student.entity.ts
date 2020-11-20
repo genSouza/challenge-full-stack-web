@@ -12,7 +12,7 @@ export class Student extends BaseEntity {
   ra: number;
 
   @Column({ unique: true })
-  cpf: number;
+  cpf: string;
 
   @Column()
   name: string;
