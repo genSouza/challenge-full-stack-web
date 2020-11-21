@@ -90,13 +90,6 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-      // items: [
-      //   {
-      //     icon: 'mdi-school-outline',
-      //     title: 'Alunos',
-      //     to: '/',
-      //   },
-      // ],
       miniVariant: true,
       right: true,
       rightDrawer: false,
