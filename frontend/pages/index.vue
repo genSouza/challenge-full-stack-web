@@ -1,93 +1,111 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
+  <v-container>
+    <v-row>
+      <v-btn class="ml-4 mt-2" dark color="#9816F4" @click="ShowNewDialog()">
+        Cadastrar aluno
+        <v-icon right dark>mdi-plus-circle-outline</v-icon>
+      </v-btn>
+    </v-row>
+    <v-card class="elevation-6 mt-4 ml-1">
+      <v-toolbar color="#47bac1" dark flat>
+        <span class="title mx-4">Consulta de alunos</span>
+      </v-toolbar>
+      <v-card-text>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col md="4" lg="4" sm="6" class="pt-0">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Digite sua busca"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-data-table
+              item-key="uuid"
+              :items="students"
+              :headers="headers"
+              sort-by="ra"
+              class="elevation-1"
             >
-              documentation </a
-            >.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br />
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+            </v-data-table>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
+import { mapMutations } from 'vuex'
 export default {
-  components: {
-    Logo,
-    VuetifyLogo,
+  data() {
+    return {
+      search: '',
+      students: [],
+      editedIndex: -1,
+      headers: [
+        {
+          text: 'Registro Acadêmico',
+          align: 'start',
+          sortable: false,
+          value: 'ra',
+        },
+        {
+          text: 'Nome',
+          sortable: false,
+          value: 'name',
+        },
+        {
+          text: 'CPF',
+          sortable: false,
+          value: 'cpf',
+        },
+        // { text: 'Editar', sortable: false, value: 'edit' },
+        // { text: 'Excluir', sortable: false, value: 'delete' },
+      ],
+    }
+  },
+  computed: {
+    studentList: {
+      get() {
+        return this.$store.getters['student/getStudentList']
+      },
+      set(value) {
+        this.setStudentList(value)
+      },
+    },
+  },
+  async mounted() {
+    this.$store.dispatch('main/DisplayLoading', 'Please await')
+    await this.loadData()
+    this.$store.dispatch('main/CloseLoading')
+  },
+  methods: {
+    ...mapMutations({
+      setStudentList: 'student/setStudentList',
+    }),
+    async loadData() {
+      this.students = []
+      try {
+        await this.$store.dispatch('student/loadStudents')
+        this.studentList.forEach((item) => {
+          const student = {
+            uuid: item.uuid,
+            ra: item.ra,
+            name: item.name,
+            cpf: item.cpf,
+          }
+          this.students.push(student)
+        })
+      } catch (err) {
+        this.$store.dispatch('main/DisplayError', err)
+      }
+    },
   },
 }
 </script>
