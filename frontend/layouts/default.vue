@@ -18,21 +18,39 @@
           />
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-          class="mt-0"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+      </v-list>
+      <v-list>
+        <!--Menu items-->
+        <v-list>
+          <v-list-group
+            v-for="(item, index) in items.menus"
+            :key="index"
+            :value="item.active"
+            :prepend-icon="item.icon"
+            no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item
+              v-for="(subitem, i) in item.sub_menus"
+              :key="i"
+              class="pl-5"
+              @click.stop="goToPage(subitem.to)"
+            >
+              <template>
+                <v-list-item-action>
+                  <v-icon dense x-small color="#26a69a">mdi-circle</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title v-text="subitem.title"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
@@ -55,9 +73,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ModalError from '@/components/ModalError'
 import ModalSuccess from '@/components/ModalSuccess'
 import ModalLoading from '@/components/ModalLoading'
+import menuData from '../data/menu_data'
 
 export default {
   components: {
@@ -70,18 +90,31 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-school-outline',
-          title: 'Alunos',
-          to: '/',
-        },
-      ],
+      // items: [
+      //   {
+      //     icon: 'mdi-school-outline',
+      //     title: 'Alunos',
+      //     to: '/',
+      //   },
+      // ],
       miniVariant: true,
       right: true,
       rightDrawer: false,
       title: 'Módulo Acadêmico',
     }
+  },
+  computed: {
+    ...mapGetters({
+      items: 'main/getMenu',
+    }),
+  },
+  created() {
+    this.$store.dispatch('main/loadMenu', menuData)
+  },
+  methods: {
+    goToPage(url) {
+      this.$router.push(url)
+    },
   },
 }
 </script>

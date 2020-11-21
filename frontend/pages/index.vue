@@ -81,7 +81,7 @@ export default {
     },
   },
   async mounted() {
-    this.$store.dispatch('main/DisplayLoading', 'Please await')
+    this.$store.dispatch('main/DisplayLoading', 'Por favor espere...')
     await this.loadData()
     this.$store.dispatch('main/CloseLoading')
   },
