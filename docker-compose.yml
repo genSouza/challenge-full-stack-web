@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  db: 
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testDB
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5430:5432'
+  backend:
+    build: ./backend/
+    command: npm run start:dev
+    depends_on:
+      - db
+    volumes:
+      - ./backend/:/usr/src/app
+    ports:
+      - '3001:3001'
+  frontend:
+    build: './frontend/'
+    command: npm run dev
+    depends_on:
+      - backend    
+    volumes:
+      - ./frontend/:/usr/src/app
+    ports:
+      - '3000:3000'    
+    
