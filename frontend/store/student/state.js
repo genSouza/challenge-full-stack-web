@@ -6,4 +6,5 @@ export default () => ({
     name: '',
     email: '',
   },
+  exceptionMessage: '',
 })

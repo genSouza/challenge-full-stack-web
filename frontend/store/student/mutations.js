@@ -1,4 +1,7 @@
 export default {
+  setExceptionMessage(state, exceptionMessage) {
+    state.exceptionMessage = exceptionMessage
+  },
   setStudentList(state, studentList) {
     state.studentList = studentList
   },

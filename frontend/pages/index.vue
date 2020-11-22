@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-btn class="ml-4 mt-2" dark color="#9816F4" @click="ShowNewDialog()">
+      <v-btn class="ml-4 mt-2" dark color="#9816F4" @click="goToAddForm()">
         Cadastrar aluno
         <v-icon right dark>mdi-plus-circle-outline</v-icon>
       </v-btn>
@@ -105,6 +105,9 @@ export default {
       } catch (err) {
         this.$store.dispatch('main/DisplayError', err)
       }
+    },
+    goToAddForm() {
+      this.$router.push('/add')
     },
   },
 }

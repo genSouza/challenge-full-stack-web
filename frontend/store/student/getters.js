@@ -1,4 +1,5 @@
 export default {
+  getExceptionMessage: (state) => state.exceptionMessage,
   getStudentList: (state) => state.studentList,
   getStudentRa: (state) => state.studentDto.ra,
   getStudentCpf: (state) => state.studentDto.cpf,

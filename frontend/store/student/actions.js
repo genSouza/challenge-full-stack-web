@@ -15,4 +15,18 @@ export default {
         throw err
       })
   },
+  async saveStudent({ commit }, studentDto) {
+    let result = null
+    console.log(API.saveStudent)
+    await this.$axios
+      .$post(API.saveStudent, studentDto)
+      .then((data) => {
+        result = data
+      })
+      .catch((err) => {
+        commit('setExceptionMessage', err.response.data.message)
+        throw err
+      })
+    return result
+  },
 }
