@@ -57,7 +57,10 @@ export class StudentService {
     return await this.repository.saveStudent(dto);
   }
 
-  async updateStudent(uuid: string, dto: StudentUpdateDto): Promise<StudentDto> {
+  async updateStudent(
+    uuid: string,
+    dto: StudentUpdateDto,
+  ): Promise<StudentDto> {
     const student = await this.getStudentById(uuid);
 
     return await this.repository.updateStudent(dto, student);
@@ -65,6 +68,6 @@ export class StudentService {
 
   async deleteStudent(uuid: string): Promise<void> {
     const found = await this.getStudentById(uuid);
-    await found.softRemove();
+    await this.repository.softRemove(found)   // found.softRemove();
   }
 }
