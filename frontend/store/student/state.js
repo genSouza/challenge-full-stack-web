@@ -6,5 +6,6 @@ export default () => ({
     name: '',
     email: '',
   },
+  studentId: null,
   exceptionMessage: '',
 })

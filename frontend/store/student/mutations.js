@@ -1,4 +1,7 @@
 export default {
+  setStudentDto(state, studentDto) {
+    state.studentDto = studentDto
+  },
   setExceptionMessage(state, exceptionMessage) {
     state.exceptionMessage = exceptionMessage
   },
@@ -16,5 +19,8 @@ export default {
   },
   setStudentEmail(state, email) {
     state.studentDto.email = email
+  },
+  setStudentId(state, id) {
+    state.studentId = id
   },
 }

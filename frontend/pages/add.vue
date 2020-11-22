@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-6">
+  <v-card class="elevation-6 mt-5">
     <v-toolbar color="#47bac1" dark flat>
       <span class="title mx-4">Cadastro de alunos</span>
     </v-toolbar>
@@ -35,15 +35,6 @@
               :rules="[required('CPF')]"
             ></v-text-field>
           </v-col>
-          <!-- <v-col md="3">
-            <h5>CPF</h5>
-            <the-mask
-              v-model="ip"
-              label="CPF (somente números)"
-              type="text"
-              :mask="['###.###.###-##', '##.###.###/####-##']"
-            />
-          </v-col> -->
         </v-row>
       </v-form>
     </v-card-text>
@@ -53,24 +44,20 @@
         Cancelar
       </v-btn>
       <v-btn
-        v-if="name && email && ra && cpf"
+        v-if="name && email && ra && cpf.length == 14"
         color="#9816F4"
         dark
         @click="save()"
       >
-        Save
+        Salvar
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-// import { TheMask } from 'vue-the-mask'
-// import { VueMaskDirective } from 'v-mask'
 import validations from '@/utils/validations'
 export default {
-  // components: { TheMask },
-  // directives: { VueMaskDirective },
   data() {
     return {
       ip: null,
@@ -97,7 +84,7 @@ export default {
           ra: Number(this.ra),
           cpf: this.cpf,
         }
-        await this.$store.dispatch('student/saveStudent', studentDto)
+        await this.$store.dispatch('student/save', studentDto)
         this.$store.dispatch('main/CloseLoading')
         this.$store.dispatch('main/DisplaySuccess', `Dados salvos com sucesso!`)
         location.reload()

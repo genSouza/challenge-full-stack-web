@@ -1,7 +1,7 @@
 <template>
   <v-card class="elevation-6">
     <v-toolbar color="#47bac1" dark flat>
-      <span class="title mx-4">{{ header }}</span>
+      <span class="title mx-4">Editar aluno</span>
     </v-toolbar>
     <v-card-text>
       <v-form v-model="valid" class="ml-4">
@@ -24,18 +24,14 @@
             <v-text-field
               v-model="ra"
               label="RA"
-              :rules="[required('ra'), minLength('ra', 1)]"
+              :disabled="true"
             ></v-text-field>
           </v-col>
           <v-col md="3">
             <v-text-field
               v-model="cpf"
               label="CPF"
-              :rules="[
-                required('CPF'),
-                minLength('CPF', 11),
-                maxLength('CPF', 11),
-              ]"
+              :disabled="true"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -43,23 +39,8 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn
-        v-if="closeEnabled"
-        color="#448AFF"
-        class="mr-6"
-        dark
-        @click="close()"
-      >
-        Close
-      </v-btn>
-      <v-btn
-        v-if="clearEnabled"
-        color="#448AFF"
-        class="mr-6"
-        dark
-        @click="clear()"
-      >
-        Clear
+      <v-btn color="#448AFF" class="mr-6" dark @click="close()">
+        Cancelar
       </v-btn>
       <v-btn
         v-if="name && email && ra && cpf"
@@ -67,7 +48,7 @@
         dark
         @click="save()"
       >
-        Save
+        Salvar
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -79,14 +60,10 @@ export default {
   props: {
     close: Function,
     afterSave: Function, // where to redirect after save?
-    header: String,
-    clearEnabled: Boolean,
-    closeEnabled: Boolean,
-    // redirectToListPage: Boolean
   },
   data() {
     return {
-      isLoading: false,
+      valid: false,
       ...validations,
     }
   },
@@ -131,6 +108,25 @@ export default {
       setStudentName: 'student/setStudentName',
       setStudentEmail: 'student/setStudentEmail',
     }),
+    async save() {
+      this.$store.dispatch('main/DisplayLoading', 'Please await')
+      try {
+        const dto = {
+          name: this.name,
+          email: this.email,
+        }
+        await this.$store.dispatch('student/update', dto)
+        this.$store.dispatch('main/DisplaySuccess', `Salvo com sucesso!`)
+        this.afterSave()
+      } catch (err) {
+        this.$store.dispatch(
+          'main/DisplayError',
+          this.$store.getters['student/getExceptionMessage']
+        )
+      } finally {
+        this.$store.dispatch('main/CloseLoading')
+      }
+    },
   },
 }
 </script>

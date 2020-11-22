@@ -31,6 +31,7 @@ export class StudentService {
     dto.ra = student.ra;
     dto.name = student.name;
     dto.cpf = student.cpf;
+    dto.email = student.email;
     return dto;
   }
 
